@@ -1,0 +1,330 @@
+package com.mycompany.brandonautomatas;
+
+import java.util.Stack;
+import javax.swing.JOptionPane;
+
+/**
+ * Lenguajes y Autómatas II
+ *
+ * @author Brandon Alexis Prado Castro, 19051178
+ * @version 1.0.27.10.2023
+ */
+
+public class FrmPrincipal extends javax.swing.JFrame {
+
+    public static String Prefija(String expresion) {
+        // aqui lo que se esta haciendo es que se almacena la expresion
+        // el StringBuilder se puede usar para modificar una cadena sin crear un objeto
+        StringBuilder prefija = new StringBuilder();
+
+        // se necesita una pila para poder realizar la conversion de la expresion a prefija
+        Stack<Character> pila = new Stack<>();
+
+        //aqui lo que se hace es que se tiene que recorrer toda la expresion para poder catalogarla 
+        //e ir construyendo la notacion prefija esto se guarda en la variable c que corresponde a cada caracter
+        for (int i = expresion.length() - 1; i >= 0; i--) {
+            char caracter = expresion.charAt(i);
+
+            //aqui lo que se hace es que validar si el caracter es una letra o digito
+            if (Character.isLetterOrDigit(caracter)) {
+                prefija.insert(0, caracter);//se agrega o almacena para ir construyendo la expresion
+            } else if (caracter == ')') {
+                //si el caracter es un parentesis de cierre, agregarlo a la pila.
+                pila.push(caracter);
+            } else if (caracter == '(') {
+
+                //aqui lo que se hace es que si es un ( se desapilara el elemento de la pila y
+                //agregarlo a la expresion prefija esto sera hasta encontrar el )
+                while (!pila.isEmpty() && pila.peek() != ')') {
+                    prefija.insert(0, pila.pop());
+                }
+
+                //aqui lo que se hace es que si la pila no esta vacia y si el elemento de la parte
+                //superior es un ) se elimina el parentesis de cierre en la pila
+                if (!pila.isEmpty() && pila.peek() == ')') {
+                    pila.pop();
+                }
+            } else {
+
+                //aqui lo que se hace es hace un ciclo que se ejecute mientras se cumpla condicion
+                // en donde se van a desapilar operadores de la pila y agregarlos a la expresion
+                //que tiene mayor procedencia que el operador actual
+                while (!pila.isEmpty() && Operador(caracter) < Operador(pila.peek())) {
+                    prefija.insert(0, pila.pop());
+                }
+                // se agrega el operador actual a la pila.
+                pila.push(caracter);
+            }
+        }
+
+        //aqui lo que se hace es desapilar cualquier operador restante de la pila y agregarlo a la expresión pref
+        while (!pila.isEmpty()) {
+            prefija.insert(0, pila.pop());
+        }
+
+        //se deevuelve la expresión prefija como una cadena.
+        return prefija.toString();
+    }
+
+    //este metodo lo que nos permite es que asigna una prioridad a los operadores 
+    //para poder ir resolviendo la expresion a la notacion
+    private static int Operador(char operator) {
+        if (operator == '+' || operator == '-') {
+            //se retorna 1 para los operadores de suma y resta.
+            return 1;
+        } else if (operator == '*' || operator == '/') {
+            //se retorna 2 para los operadores de multiplicacion y division
+            return 2;
+        } else {
+            //aqui se retorna -1 si el operador no es valido
+            return -1;
+        }
+    }
+
+//    public static String Posfija(String expresion) {
+//        Stack<Character> pila = new Stack<>();
+//        StringBuilder resultado = new StringBuilder();
+//
+//        for (char c : expresion.toCharArray()) {
+//            switch (c) {
+//                case '(':
+//                    pila.push(c);
+//                    break;
+//                case ')':
+//                    // Pop y añadir caracteres al resultado hasta encontrar '('
+//                    while (!pila.isEmpty() && pila.peek() != '(') {
+//                        resultado.append(pila.pop());
+//                    }   // Pop '('
+//                    pila.pop();
+//                    break;
+//                default:
+//                    // Añadir números y operadores al resultado
+//                    resultado.append(c);
+//                    break;
+//            }
+//        }
+//
+//        // Añadir cualquier operador o número restante en el stack al resultado
+//        while (!pila.isEmpty()) {
+//            resultado.append(pila.pop());
+//        }
+//
+//        return resultado.toString();
+//    }
+    /**
+     * Creates new form FrmPrincipal
+     */
+    public FrmPrincipal() {
+        initComponents();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        TxtEntrada = new javax.swing.JTextField();
+        BtnAnalizar = new javax.swing.JButton();
+        BtnLimpiar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        TxtPrefijo = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 153));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("ANALIZADOR DE NOTACIONES");
+
+        jLabel2.setBackground(new java.awt.Color(255, 153, 153));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel2.setText("* Ingresa la operación aritmética que deseas analizar:");
+
+        TxtEntrada.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        TxtEntrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtEntradaActionPerformed(evt);
+            }
+        });
+
+        BtnAnalizar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        BtnAnalizar.setText("Analizar");
+        BtnAnalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAnalizarActionPerformed(evt);
+            }
+        });
+
+        BtnLimpiar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        BtnLimpiar.setText("Limpiar");
+        BtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLimpiarActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setBackground(new java.awt.Color(255, 153, 153));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel3.setText("→ Resultado");
+
+        jLabel4.setBackground(new java.awt.Color(255, 153, 153));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
+        jLabel4.setText("- Prefijo:");
+
+        TxtPrefijo.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        TxtPrefijo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtPrefijoActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Brandon Alexis Prado Castro, 19051178.");
+
+        jLabel6.setText("Lenguajes y Autómatas II");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(TxtPrefijo, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(TxtEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(BtnAnalizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(BtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                .addContainerGap(71, Short.MAX_VALUE))
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(TxtEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(TxtPrefijo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addContainerGap())
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void TxtEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtEntradaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtEntradaActionPerformed
+
+    private void TxtPrefijoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtPrefijoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtPrefijoActionPerformed
+
+    private void BtnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAnalizarActionPerformed
+        if (TxtEntrada.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "INGRESA UNA EXPRESIÓN PARA ANALIZAR, LA CAJA DE TEXTO ESTÁ VACÍA.");
+        } else {
+            String entrada = TxtEntrada.getText();
+            String valorPrefijo = Prefija(entrada);
+            //String valorPosfija = Posfija(entrada);
+            TxtPrefijo.setText(valorPrefijo);
+            //TxtPosfijo.setText(valorPosfija);
+        }
+    }//GEN-LAST:event_BtnAnalizarActionPerformed
+
+    private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
+        // TODO add your handling code here:
+        TxtEntrada.setText("");
+        TxtPrefijo.setText("");
+        //TxtPosfijo.setText("");
+    }//GEN-LAST:event_BtnLimpiarActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FrmPrincipal().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnAnalizar;
+    private javax.swing.JButton BtnLimpiar;
+    private javax.swing.JTextField TxtEntrada;
+    private javax.swing.JTextField TxtPrefijo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    // End of variables declaration//GEN-END:variables
+}
